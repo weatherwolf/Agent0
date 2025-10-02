@@ -1,0 +1,14 @@
+# Retries: stop after 3 failed attempts for the same error
+max_task_retries: 3
+
+# File system sandbox: only allow reading/writing inside workspace/
+file_access:
+  restrict_to_workspace: true
+  allow_paths:
+    - "workspace/"
+
+# (Optional) timeouts to prevent runaway steps
+timeouts:
+  per_agent_seconds: 60
+  subprocess_seconds: 120
+  global_seconds: 300

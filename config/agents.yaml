@@ -1,0 +1,14 @@
+planner:
+  model: "gpt-5-mini"
+  prompt: "prompts/planner.md"
+  system: "prompts/system.md"
+
+coder:
+  model: "gpt-5-nano"
+  prompt: "prompts/coder.md"
+  system: "prompts/system.md"
+
+tester:
+  model: "gpt-5-nano"
+  prompt: "prompts/tester.md"
+  system: "prompts/system.md"

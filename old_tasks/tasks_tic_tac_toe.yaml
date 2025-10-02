@@ -1,0 +1,54 @@
+goal: >
+  Implement a CLI Tic-Tac-Toe game in Python.
+
+  Create new files under 'workspace_tictactoe/':
+    - tictactoe/board.py with:
+        - Board dataclass (cells: list[str] length 9 with values in {" ", "X", "O"}, current_player: Literal["X","O"]).
+        - Board.available_moves() -> list[int]: return zero-based indices of empty cells.
+        - Board.place(pos: int, marker: Literal["X","O"]) -> bool: place marker if valid and return True; else False.
+        - Board.reset() -> None: clear board and set current_player to "X".
+        - render(board: Board) -> str: return a human-readable 3x3 board string.
+
+    - tictactoe/logic.py with pure functions (no I/O):
+        - winner(cells: list[str]) -> Optional[str]: return "X", "O", or None.
+        - is_draw(cells: list[str]) -> bool: True if no winner and no spaces remain.
+        - next_player(player: Literal["X","O"]) -> Literal["X","O"]: swap players.
+        - best_move(cells: list[str], me: Literal["X","O"], opp: Literal["X","O"]) -> int:
+            Choose a move using a simple heuristic:
+              1) winning move if available,
+              2) block opponent’s winning move,
+              3) center if free (index 4),
+              4) any corner if free (0,2,6,8),
+              5) otherwise first available move.
+            Must not mutate input; raise ValueError if no moves available.
+
+    - app.py:
+        - Behavior:
+            * CLI interface for human-vs-human or human-vs-CPU.
+            * Args:
+                --cpu {X,O,none} (default: none)
+                --first {X,O} (default: X)
+                --seed INT (optional, for reproducible CPU choices when ties occur)
+            * If --cpu is set, the CPU plays that marker using logic.best_move.
+            * Accepts human moves as 1-9 positions (left-to-right, top-to-bottom).
+            * Supports 'q' to quit and 'r' to restart current game.
+            * Prints board after each move and announces win/draw.
+
+    - README.md:
+        - Brief usage instructions, mapping of positions (1–9), and examples.
+
+    - tictactoe/__init__.py (empty, to make it a package).
+
+  Constraints:
+    - Pure Python (no external dependencies).
+    - Python >= 3.10.
+    - All non-CLI logic must be in tictactoe/board.py and tictactoe/logic.py and be easily unit-testable.
+    - Include type hints and docstrings; follow PEP 8.
+    - Deterministic logic; the only source of non-determinism may be tie-breaking in CPU move selection,
+      which becomes reproducible when --seed is provided.
+    - Do not modify tests (if any exist).
+
+  Notes:
+    - Board indices are 0–8 internally; CLI uses 1–9 for user friendliness.
+    - Keep functions small and focused; avoid I/O inside logic.py.
+    - Prefer pure functions for game rules to simplify testing.

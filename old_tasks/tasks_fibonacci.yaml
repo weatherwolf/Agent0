@@ -1,0 +1,15 @@
+goal: >
+  Implement a basic Fibonacci module in Python.
+
+  Create new files under 'workspace_fibonacchi/':
+    - fibonacci/module.py with:
+        - fib(n: int) -> int: return the n-th Fibonacci number (0-indexed: fib(0)=0, fib(1)=1).
+        - sequence(n: int) -> list[int]: return the first n Fibonacci numbers as a list.
+    - app.py that reads an integer N from argv (or prompts if missing) and prints the sequence
+      on one line as comma-separated values.
+
+  Constraints:
+    - Pure Python (no external dependencies).
+    - Time complexity: O(n); extra space O(1) for fib() and O(n) for sequence().
+    - Include type hints and docstrings; follow PEP 8.
+    - Keep code clear and testable; do not modify tests (if any exist).
