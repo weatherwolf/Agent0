@@ -110,3 +110,6 @@ yarn-error.log*
 secrets/
 secrets.yaml
 secrets.yml
+
+# others
+overview/*
