@@ -1,15 +1,43 @@
-goal: >
-  Implement a basic Fibonacci module in Python.
-
-  Create new files under 'workspace_fibonacci/' and workspace_fibonacci/tests/:
-    - fibonacci/module.py with:
-        - fib(n: int) -> int: return the n-th Fibonacci number (0-indexed: fib(0)=0, fib(1)=1).
-        - sequence(n: int) -> list[int]: return the first n Fibonacci numbers as a list.
-    - app.py that reads an integer N from argv (or prompts if missing) and prints the sequence
-      on one line as comma-separated values.
-
-  Constraints:
-    - Pure Python (no external dependencies).
-    - Time complexity: O(n); extra space O(1) for fib() and O(n) for sequence().
-    - Include type hints and docstrings; follow PEP 8.
-    - Keep code clear and testable; do not modify tests (if any exist).
+goal: "Implement a simple prime numbers module in Python. Create new files under 'primes/':\n\
+  \  - primes/module.py with:\n      - is_prime(n: int) -> bool: return True if n\
+  \ is prime, else False (O(sqrt(n))).\n      - primes_up_to(n: int) -> list[int]:\
+  \ return all primes <= n; return [] for n < 2.\n      - prime_factors(n: int) ->\
+  \ list[int]: return the prime factorization of n; raise ValueError for n < 2.\n\
+  \  - app.py that reads an integer N from argv (or prompts if missing) and prints\
+  \ True/False indicating primality.\n\nConstraints:\n  - Pure Python (standard library\
+  \ only).\n  - Include type hints and docstrings; follow PEP 8.\n  - Clear, testable\
+  \ code."
+default_options: true
+workspace_dir: workspace/primes/
+artifacts:
+- __init__.py
+- module.py
+- app.py
+constraints:
+  language: python
+  python_version: 3.12.5
+  os: windows
+  dependencies:
+    allowed:
+    - typing
+    notes: Pure Python preferred; standard library only
+  style: PEP8, type hints, clear docstrings
+acceptance_criteria:
+- is_prime(2) == True, is_prime(1) == False, is_prime(4) == False, is_prime(29) ==
+  True
+- primes_up_to(10) returns [2, 3, 5, 7]; primes_up_to(1) returns []
+- prime_factors(28) returns [2, 2, 7]; prime_factors(n) raises ValueError for n <
+  2
+- Running `python primes/app.py 29` prints `True` on a single line
+- If no CLI argument is provided, the app prompts for an integer and then prints True/False
+run:
+  command: python primes/app.py 29
+  notes: Windows + Python 3.12.5
+tests_policy:
+  create_tests: false
+  test_folder: tests/
+  minimum: none
+  run_tests: false
+  no_tests_reason: User opted out
+context_paths:
+- config/example_tasks/

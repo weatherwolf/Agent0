@@ -14,5 +14,9 @@ class BaseAgent:
     def call_llm(self, user_payload: str) -> str:
         return call_llm(self.conf["model"], self.sys_prompt, user_payload)
     
+    def call_llm_with_system(self, system_prompt: str, user_payload: str) -> str:
+        """Override system prompt for this call"""
+        return call_llm(self.conf["model"], system_prompt, user_payload)
+    
     def safe_json_loads(self, text: str, log_func=None) -> Any:
         return safe_json_loads(text, log_func)

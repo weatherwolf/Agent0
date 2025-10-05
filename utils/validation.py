@@ -76,11 +76,61 @@ ERROR_SCHEMA = {
     }
 }
 
+# Enhanced Tasks Schema for structured config/tasks.yaml
+TASKS_SCHEMA = {
+    "type": "object",
+    "required": ["goal"],
+    "properties": {
+        "default_options": {"type": "boolean"},
+        "simple_mode": {"type": "boolean"},
+        "goal": {"type": "string", "minLength": 10, "maxLength": 20000},
+        # Optional structured fields for enhanced format
+        "workspace_dir": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "artifacts": {"type": "array", "items": {"type": "string"}},
+        "constraints": {
+            "type": "object",
+            "properties": {
+                "language": {"type": "string", "enum": ["python"]},
+                "python_version": {"type": "string", "pattern": r"^3\.12\.5$"},
+                "os": {"type": "string", "enum": ["windows"]},
+                "dependencies": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {"type": "array", "items": {"type": "string"}},
+                        "notes": {"type": "string"}
+                    }
+                },
+                "style": {"type": "string"}
+            }
+        },
+        "acceptance_criteria": {"type": "array", "items": {"type": "string"}},
+        "run": {
+            "type": "object",
+            "properties": {
+                "command": {"type": "string"},
+                "notes": {"type": "string"}
+            }
+        },
+        "tests_policy": {
+            "type": "object",
+            "properties": {
+                "create_tests": {"type": "boolean"},
+                "test_folder": {"type": "string"},
+                "minimum": {"type": "string", "enum": ["none", "basic", "extended"]},
+                "no_tests_reason": {"type": "string"},
+                "run_tests": {"type": "boolean"}  # Controls RUN_TEST functionality
+            }
+        },
+        "context_paths": {"type": "array", "items": {"type": "string"}}
+    }
+}
+
 # Validator instances
 PLANNER_VALIDATOR = SchemaValidator(PLANNER_SCHEMA)
 CODER_VALIDATOR = SchemaValidator(CODER_SCHEMA)
 TESTER_VALIDATOR = SchemaValidator(TESTER_SCHEMA)
 ERROR_VALIDATOR = SchemaValidator(ERROR_SCHEMA)
+TASKS_VALIDATOR = SchemaValidator(TASKS_SCHEMA)
 
 def main():
     # Test planner schema
@@ -130,6 +180,29 @@ def main():
     
     ERROR_VALIDATOR.validate(test_error_data)
     print("✅ Error schema validation passed")
+    
+    # Test tasks schema
+    test_tasks_data = {
+        "goal": "Implement a basic Fibonacci module in Python.",
+        "workspace_dir": "workspace_fibonacci/",
+        "default_options": True,
+        "simple_mode": True,
+        "artifacts": ["workspace_fibonacci/fibonacci/module.py", "workspace_fibonacci/app.py"],
+        "constraints": {
+            "language": "python",
+            "python_version": "3.12.5",
+            "os": "windows",
+            "dependencies": {"allowed": ["typing"], "notes": "Pure Python preferred"},
+            "style": "PEP8, type hints"
+        },
+        "acceptance_criteria": ["fib(0)==0, fib(1)==1", "sequence(10) returns list of length 10"],
+        "run": {"command": "python workspace_fibonacci/app.py 10", "notes": "Windows + Python 3.12.5"},
+        "tests_policy": {"create_tests": True, "test_folder": "workspace_fibonacci/tests/", "minimum": "basic"},
+        "context_paths": ["config/example_tasks/"]
+    }
+    
+    TASKS_VALIDATOR.validate(test_tasks_data)
+    print("✅ Tasks schema validation passed")
     
     print("\n🎉 All schema validations passed!")
 

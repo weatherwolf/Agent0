@@ -22,7 +22,7 @@ goal: >
                 * If wrap=False: hitting walls -> game over.
                 * If wrap=True: crossing edges wraps to opposite side.
                 * Hitting own body -> game over.
-            - Growing: when head reaches food, increase length by 1 (don’t pop tail this tick), +1 score.
+            - Growing: when head reaches food, increase length by 1 (don't pop tail this tick), +1 score.
 
     - snake/io.py with:
         - CursesRenderer class:
@@ -65,3 +65,42 @@ goal: >
     - Wall collisions end the game unless --wrap is set, in which case the snake wraps.
     - The HUD shows score, speed (FPS), wrap mode, and pause state.
     - On game over, a restart/quit prompt works without crashing.
+
+workspace_dir: workspace_snake/
+
+artifacts:
+  - snake/__init__.py
+  - snake/game.py
+  - snake/io.py
+  - app.py
+  - tests/test_game.py
+  - tests/test_io.py
+
+constraints:
+  language: python
+  python_version: "3.12.5"
+  os: windows
+  dependencies:
+    allowed: ["typing", "curses", "msvcrt"]
+    notes: "Standard library only, curses preferred with msvcrt fallback"
+  style: "PEP8, type hints, clear docstrings"
+
+acceptance_criteria:
+  - "Arrow keys and WASD move the snake; 'p' pauses; 'q' quits"
+  - "Snake grows on food; score increments; food never spawns on the snake"
+  - "Wall collisions end the game unless --wrap is set, in which case the snake wraps"
+  - "The HUD shows score, speed (FPS), wrap mode, and pause state"
+  - "On game over, a restart/quit prompt works without crashing"
+
+run:
+  command: "python workspace_snake/app.py --width 20 --height 12 --speed 10"
+  notes: "Windows + Python 3.12.5, curses with msvcrt fallback"
+
+tests_policy:
+  create_tests: true
+  test_folder: "workspace_snake/tests/"
+  minimum: "basic"
+  run_tests: true
+
+context_paths:
+  - "config/example_tasks/"

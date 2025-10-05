@@ -13,3 +13,39 @@ goal: >
     - Time complexity: O(n); extra space O(1) for fib() and O(n) for sequence().
     - Include type hints and docstrings; follow PEP 8.
     - Keep code clear and testable; do not modify tests (if any exist).
+
+workspace_dir: workspace_fibonacci/
+
+artifacts:
+  - fibonacci/__init__.py
+  - fibonacci/module.py
+  - app.py
+  - tests/test_fibonacci.py
+
+constraints:
+  language: python
+  python_version: "3.12.5"
+  os: windows
+  dependencies:
+    allowed: ["typing"]
+    notes: "Pure Python preferred"
+  style: "PEP8, type hints, clear docstrings"
+
+acceptance_criteria:
+  - "fib(0)==0, fib(1)==1, fib(10)==55"
+  - "sequence(10) returns a list of length 10 starting with 0,1"
+  - "Time complexity: O(n); extra space O(1) for fib() and O(n) for sequence()"
+  - "Running `python workspace_fibonacci/app.py 10` prints 0,1,1,2,3,5,8,13,21,34"
+
+run:
+  command: "python workspace_fibonacci/app.py 10"
+  notes: "Windows + Python 3.12.5"
+
+tests_policy:
+  create_tests: true
+  test_folder: "workspace_fibonacci/tests/"
+  minimum: "basic"
+  run_tests: true
+
+context_paths:
+  - "config/example_tasks/"

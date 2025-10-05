@@ -16,7 +16,7 @@ goal: >
         - best_move(cells: list[str], me: Literal["X","O"], opp: Literal["X","O"]) -> int:
             Choose a move using a simple heuristic:
               1) winning move if available,
-              2) block opponent’s winning move,
+              2) block opponent's winning move,
               3) center if free (index 4),
               4) any corner if free (0,2,6,8),
               5) otherwise first available move.
@@ -52,3 +52,47 @@ goal: >
     - Board indices are 0–8 internally; CLI uses 1–9 for user friendliness.
     - Keep functions small and focused; avoid I/O inside logic.py.
     - Prefer pure functions for game rules to simplify testing.
+
+workspace_dir: workspace_tictactoe/
+
+artifacts:
+  - tictactoe/__init__.py
+  - tictactoe/board.py
+  - tictactoe/logic.py
+  - app.py
+  - README.md
+  - tests/test_board.py
+  - tests/test_logic.py
+  - tests/test_app.py
+
+constraints:
+  language: python
+  python_version: "3.12.5"
+  os: windows
+  dependencies:
+    allowed: ["typing"]
+    notes: "Pure Python preferred"
+  style: "PEP8, type hints, clear docstrings"
+
+acceptance_criteria:
+  - "Human vs human gameplay works correctly"
+  - "Human vs CPU gameplay works with --cpu X or --cpu O"
+  - "CPU uses best_move logic for optimal play"
+  - "Board rendering shows 3x3 grid with positions 1-9"
+  - "Win detection works for rows, columns, and diagonals"
+  - "Draw detection works when board is full with no winner"
+  - "Restart functionality works with 'r' command"
+  - "Quit functionality works with 'q' command"
+
+run:
+  command: "python workspace_tictactoe/app.py --cpu O --first X"
+  notes: "Windows + Python 3.12.5, human vs CPU game"
+
+tests_policy:
+  create_tests: true
+  test_folder: "workspace_tictactoe/tests/"
+  minimum: "basic"
+  run_tests: true
+
+context_paths:
+  - "config/example_tasks/"

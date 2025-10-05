@@ -2,6 +2,8 @@
 import yaml
 import pathlib
 from typing import Dict, Any
+from utils.validation import TASKS_VALIDATOR
+from jsonschema import ValidationError
 
 def load_agents_cfg() -> Dict[str, Any]:
     cfg = yaml.safe_load(open("config/agents.yaml", "r", encoding="utf-8"))
@@ -15,7 +17,34 @@ def load_policies_cfg() -> Dict[str, Any]:
     return yaml.safe_load(open("config/policies.yaml", "r", encoding="utf-8"))
 
 def load_tasks_cfg() -> Dict[str, Any]:
-    return yaml.safe_load(open("config/tasks.yaml", "r", encoding="utf-8"))
+    """Load tasks configuration with enhanced format support and backward compatibility"""
+    data = yaml.safe_load(open("config/tasks.yaml", "r", encoding="utf-8"))
+    
+    # Validate against enhanced schema
+    try:
+        TASKS_VALIDATOR.validate(data)
+        return data
+    except ValidationError:
+        # Handle backward compatibility for simple format
+        if "goal" in data:
+            # Convert simple format to enhanced format
+            return {
+                "goal": data["goal"],
+                "workspace_dir": "workspace/",
+                "artifacts": [],
+                "constraints": {
+                    "language": "python",
+                    "python_version": "3.12.5",
+                    "os": "windows",
+                    "dependencies": {"allowed": ["typing"], "notes": "Pure python preferred"},
+                    "style": "PEP8, type hints"
+                },
+                "acceptance_criteria": [],
+                "run": {"command": "python app.py", "notes": "Default run command"},
+                "tests_policy": {"create_tests": True, "test_folder": "tests/", "minimum": "basic", "run_tests": False},
+                "context_paths": []
+            }
+        raise
 
 def agent_conf(agents: Dict[str, Any], role: str) -> Dict[str, Any]:
     if role not in agents:
