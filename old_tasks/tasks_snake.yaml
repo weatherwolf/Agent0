@@ -1,0 +1,67 @@
+goal: >
+  Implement a terminal Snake game in Python.
+
+  Create new files under 'workspace_snake/':
+    - snake/game.py with:
+        - Direction enum (UP, DOWN, LEFT, RIGHT).
+        - Point dataclass (x: int, y: int).
+        - Game class:
+            - __init__(width: int = 20, height: int = 12, wrap: bool = False, seed: int | None = None)
+            - set_direction(dir: Direction) -> None
+            - tick() -> None              # advance one frame; moves snake, checks collisions, handles food
+            - is_over: bool               # True when the snake hits a wall/self (unless wrap), or user quits
+            - score: int                  # number of food eaten
+            - snake: list[Point]          # head at index 0
+            - food: Point                 # current food location
+            - board_size: tuple[int, int] # (width, height)
+            - reset(seed: int | None = None) -> None
+          Notes:
+            - Place initial snake length=3 centered horizontally, moving RIGHT.
+            - Food must spawn uniformly at random on an empty cell.
+            - Collision rules:
+                * If wrap=False: hitting walls -> game over.
+                * If wrap=True: crossing edges wraps to opposite side.
+                * Hitting own body -> game over.
+            - Growing: when head reaches food, increase length by 1 (don’t pop tail this tick), +1 score.
+
+    - snake/io.py with:
+        - CursesRenderer class:
+            - __enter__ / __exit__ for terminal setup/teardown
+            - draw(game: Game) -> None       # draws border, snake, food, HUD (score, speed, wrap, pause)
+            - read_input() -> str | None     # returns one of "up","down","left","right","pause","quit" or None
+          Implementation:
+            - Use 'curses' with nodelay for non-blocking input.
+            - Map Arrow keys and WASD; 'p' to pause, 'q' to quit.
+
+        - WinInputFallback (optional minimal input fallback for Windows without curses):
+            - Only used if 'curses' import fails; use 'msvcrt' for non-blocking key reads.
+            - Provide a simple ANSI text redraw (no true screen buffering).
+          The app should prefer CursesRenderer when available.
+
+    - app.py that:
+        - Parses CLI args: --width INT (default 20), --height INT (default 12), --speed FLOAT (frames/sec, default 10),
+          --wrap (flag), --seed INT (optional).
+        - Runs the main loop:
+            * Initialize Game with args.
+            * With CursesRenderer (or fallback), in a loop:
+                - poll input -> translate to Game.set_direction / pause / quit
+                - if not paused and not game.is_over: game.tick()
+                - render every frame
+                - sleep to target FPS (1/speed)
+            * On game over: show "Game Over — Score: X" and prompt "Press R to restart or Q to quit".
+              Handle restart by calling game.reset().
+
+  Constraints:
+    - Pure Python (standard library only). Prefer 'curses' for POSIX; provide minimal fallback using 'msvcrt' if 'curses' is unavailable.
+    - Time complexity per tick: O(1) average for collision/food checks (use a set for snake body membership).
+    - Deterministic RNG when --seed is provided.
+    - Include type hints and docstrings; follow PEP 8.
+    - Keep code clear and testable; do not modify tests (if any exist).
+    - Terminal-only rendering; no external assets; keep window within provided width/height (draw a border).
+
+  Acceptance criteria:
+    - Arrow keys and WASD move the snake; 'p' pauses; 'q' quits.
+    - Snake grows on food; score increments; food never spawns on the snake.
+    - Wall collisions end the game unless --wrap is set, in which case the snake wraps.
+    - The HUD shows score, speed (FPS), wrap mode, and pause state.
+    - On game over, a restart/quit prompt works without crashing.

@@ -12,3 +12,8 @@ tester:
   model: "gpt-5-nano"
   prompt: "prompts/tester.md"
   system: "prompts/system.md"
+
+thinker:
+  model: "gpt-5-mini"
+  prompt: "prompts/thinker.md"
+  system: "prompts/system.md"

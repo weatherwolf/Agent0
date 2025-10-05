@@ -1,7 +1,7 @@
 goal: >
   Implement a basic Fibonacci module in Python.
 
-  Create new files under 'workspace_fibonacchi/':
+  Create new files under 'workspace_fibonacci/' and workspace_fibonacci/tests/:
     - fibonacci/module.py with:
         - fib(n: int) -> int: return the n-th Fibonacci number (0-indexed: fib(0)=0, fib(1)=1).
         - sequence(n: int) -> list[int]: return the first n Fibonacci numbers as a list.
